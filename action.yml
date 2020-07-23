@@ -10,6 +10,11 @@ inputs:
     description: "Rust build profile to build the runtime with (e.g., release, debug...)"
     default: "release"
     required: true
+outputs:
+  prop:
+    description: Proposal hash of the generated runtime
+  sha256:
+    description: SHA256SUM of the generated runtime
 runs:
   using: docker
   image: 'Dockerfile'

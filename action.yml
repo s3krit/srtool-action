@@ -1,0 +1,15 @@
+name: srtool-build
+description: Build a substrate-based runtime with srtool
+author: Martin Pugh (pugh@s3kr.it)
+inputs:
+  runtime:
+    description: "Name of the runtime to build"
+    default: "polkadot-runtime"
+    required: true
+  profile:
+    description: "Rust build profile to build the runtime with (e.g., release, debug...)"
+    default: "release"
+    required: true
+runs:
+  using: docker
+  image: 'Dockerfile'

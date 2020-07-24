@@ -1,8 +1,6 @@
 #!/bin/bash
 # Not actually sure if it just gets made...
 cd /build || exit 1
-cp -r "$GITHUB_WORKSPACE"/* .
-cp -r "$GITHUB_WORKSPACE"/.* .
 ls /build
 pwd
 RUSTC_VERSION=nightly-2020-07-20 PACKAGE=$INPUT_RUNTIME build --json | tee srtool_output.json

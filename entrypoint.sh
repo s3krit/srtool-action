@@ -1,17 +1,21 @@
 #!/bin/bash
-# Not actually sure if it just gets made...
 cd /build || exit 1
-ls /build
-pwd
-RUSTC_VERSION=nightly-2020-07-20 PACKAGE=$INPUT_RUNTIME build --json | tee srtool_output.json
-ls /build
-ls /build/target
-find /build/target
-# Set a Github Action output for each key
-while IFS= read -r line; do
-  echo "::set-output name=$line::$(jq -r ".$line" < srtool_output.json)"
-done <<< "$(jq -r 'keys[]' < srtool_output.json)"
+cp -r "$GITHUB_WORKSPACE"/* /build
+cp -r "$GITHUB_WORKSPACE"/.* /build
 
-# Special case for wasm variable to get rid of relative path
-path="$(jq -r '.wasm' < srtool_output.json | sed 's_^\._/build_')"
-echo "::set-output name=wasm::$path"
+# RUSTC_VERSION=nightly-2020-07-20 PACKAGE=$INPUT_RUNTIME build --json | tee srtool_output.json
+cat /build/target/testfile
+mkdir /build/target
+echo "test" > /build/target/testfile
+# copy the target dir back to preserve it
+cp -r /build/target "$GITHUB_WORKSPACE"
+
+# Set a Github Action output for each key
+#while IFS= read -r line; do
+#  echo "::set-output name=$line::$(jq -r ".$line" < srtool_output.json)"
+#done <<< "$(jq -r 'keys[]' < srtool_output.json)"
+
+# Copy the runtime from /builds to GITHUB_WORKSPACE to get around this weird artifact bug
+cp "$(jq -r '.wasm' < srtool_output.json)" "$GITHUB_WORKSPACE"
+path="$(jq -r '.wasm' < srtool_output.json | sed "s_^\._${GITHUB_WORKSPACE}_")"
+echo "::set-output name=wasm::/build/target/testfile"
